@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
 userSchema.plugin(uniqueValidator)
 
 userSchema.pre('save', function(next) {
-  this.password = encrypt.hashPassword(this.password, this.email)
+  this.password = encrypt.hashPassword(this.password, process.env.SECRET)
   next()
 })
 

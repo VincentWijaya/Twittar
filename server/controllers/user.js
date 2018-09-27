@@ -7,6 +7,7 @@ class Controller {
   static register(req, res) {
     let newUser = {
       name: req.body.name,
+      username: req.body.username,
       email: req.body.email,
       password: req.body.password
     }
@@ -21,13 +22,15 @@ class Controller {
   }
 
   static login(req, res) {
-    let hashed = encrypt.hashPassword(req.body.password, req.body.email)
+    let hashed = encrypt.hashPassword(req.body.password, process.env.SECRET)
 
-    User.findOne({email: req.body.email, password: hashed})
+    User.findOne({$or: [{email: req.body.email}, {username: req.body.email}], password: hashed})
       .then(user => {
+        console.log(user)
         let obj = {
           id: user._id,
           name: user.name,
+          username: user.username,
           email: user.email
         }
 
