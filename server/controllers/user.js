@@ -26,7 +26,6 @@ class Controller {
 
     User.findOne({$or: [{email: req.body.email}, {username: req.body.email}], password: hashed})
       .then(user => {
-        console.log(user)
         let obj = {
           id: user._id,
           name: user.name,
