@@ -6,6 +6,7 @@ const {auth} = require('../middleware/auth')
 router.get('/', (req, res) => {
   Tweet.find()
     .populate('user', '_id name username email')
+    .sort({createdAt: 'desc'})
     .then(tweets => {
       res.status(200).json(tweets)
     })
