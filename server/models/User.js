@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validate = require('mongoose-validator');
 const uniqueValidator = require('mongoose-unique-validator');
 const encrypt = require('../helpers/encrypt')
+const random = require('mongoose-simple-random')
 
 const passValidator = [
     validate({
@@ -43,10 +44,17 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId, 
             ref: 'User'
         }
+    ],
+    followers: [
+        {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'User'
+        }
     ]
 }, {timestamps:true})
 
 userSchema.plugin(uniqueValidator)
+userSchema.plugin(random)
 
 userSchema.pre('save', function(next) {
   this.password = encrypt.hashPassword(this.password, process.env.SECRET)

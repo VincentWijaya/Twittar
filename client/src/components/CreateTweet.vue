@@ -26,6 +26,25 @@ export default {
     }
   },
   methods: {
+    getUser () {
+      let self = this
+      let token = localStorage.getItem('token') ? localStorage.getItem('token') : ''
+
+      axios({
+        method: 'get',
+        url: `${baseUrl}/users/auth`,
+        headers: {
+          token: token
+        }
+      })
+        .then(response => {
+          self.token = localStorage.getItem('token')
+          self.$store.dispatch('setUser', response.data)
+        })
+        .catch(err => {
+          console.log(err.response)
+        })
+    },
     getTweets () {
       let self = this
 
@@ -54,6 +73,7 @@ export default {
         }
       })
         .then(() => {
+          self.getUser()
           self.getTweets()
         })
         .catch(err => {

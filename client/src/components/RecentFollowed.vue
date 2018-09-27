@@ -4,20 +4,8 @@
       <div class="card-body">
         <h5 class="card-title">Recently Followed</h5>
         <ul id="recently-followed">
-          <li>
-            <a href="#">infobandung</a>
-          </li>
-          <li>
-            <a href="#">pramborsfm</a>
-          </li>
-          <li>
-            <a href="#">thebalibible</a>
-          </li>
-          <li>
-            <a href="#">threewisemonkeys</a>
-          </li>
-          <li>
-            <a href="#">sushitei</a>
+          <li v-for="followed in user.following" :key="followed._id">
+            <a href="#">{{ followed.name }}</a>
           </li>
         </ul>
       </div>

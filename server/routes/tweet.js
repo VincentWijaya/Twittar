@@ -1,6 +1,8 @@
 const router = require('express').Router()
 
 const Tweet = require('../models/Tweet')
+const User = require('../models/User')
+
 const {auth} = require('../middleware/auth')
 
 router.get('/', (req, res) => {
@@ -22,8 +24,23 @@ router.post('/', auth, (req, res) => {
   }
 
   Tweet.create(newTweet)
-    .then(() => {
-      res.status(201).json({msg: 'Tweet created!'})
+    .then(tweet => {
+      User.updateOne({_id: req.decoded.id}, {$push: {tweets: tweet._id}})
+        .then(() => {
+          res.status(201).json({msg: 'Tweet created!'})
+        })
+    })
+    .catch(err => {
+      res.status(500).json({error: err.message})
+    })
+})
+
+router.post('/search', auth, (req, res) => {
+  Tweet.find({tweet: { $regex: req.body.keyword, $options: 'i' }})
+    .populate('user', '_id name username email')
+    .sort({createdAt: 'desc'})
+    .then(tweets => {
+      res.status(200).json(tweets)
     })
     .catch(err => {
       res.status(500).json({error: err.message})

@@ -47,7 +47,40 @@ class Controller {
   }
 
   static auth(req, res) {
-    res.status(200).json(req.decoded)
+    User.findOne({_id: req.decoded.id})
+      .populate('tweets')
+      .populate('following', '_id name username')
+      .populate('followers', '_id name username')
+      .then(user => {
+        user.following.reverse()
+        res.status(200).json(user)
+      })
+      .catch(err => {
+        res.status(500).json({error: err.message})
+      })
+  }
+
+  static randomUser(req, res) {
+    User.findRandom({_id: {$ne: req.decoded.id}}, {}, {limit: 3}, (err, users) => {
+      if (err) {
+        res.status(500).json({error: err.message})
+      } else {
+        res.status(200).json(users)
+      }
+    })
+  }
+
+  static follow(req, res) {
+    let updateFollowing = User.updateOne({_id: req.decoded.id}, {$push: {following: req.params.id}})
+    let updateFollowers = User.updateOne({_id: req.params.id}, {$push: {followers: req.decoded.id}})
+
+    Promise.all([updateFollowing, updateFollowers])
+      .then(() => {
+        res.status(201).json({msg: `You just followed ${req.params.id}`})
+      })
+      .catch(err => {
+        res.status(500).json({error: err.message})
+      })
   }
 
 }

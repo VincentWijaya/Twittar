@@ -15,4 +15,8 @@ router.post('/login', userController.login)
 
 router.get('/auth', auth, userController.auth)
 
+router.get('/random', auth, userController.randomUser)
+
+router.patch('/follow/:id', auth, userController.follow)
+
 module.exports = router;
