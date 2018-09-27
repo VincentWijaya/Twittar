@@ -2,7 +2,7 @@
   <div id="app">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="#">Victwitter</a>
+        <a class="navbar-brand" href="http://localhost:8080">Victwitter</a>
         <div class="alert alert-warning" v-if="error">
           <strong>Warning!</strong> {{ error }}
         </div>

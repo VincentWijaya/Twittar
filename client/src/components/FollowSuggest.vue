@@ -12,7 +12,7 @@
                 <h6 class="mt-0">{{ user.name }} <small>@{{ user.username }}</small></h6>
 
                 <button class="btn btn-outline-info" @click="follow(user._id)" v-if="!user.followed">Follow</button>
-                <button class="btn btn-danger" @click="unfollow(user._id)" v-if="user.followed">Unfollow</button>
+                <button class="btn btn-danger" @click="unfollow(user._id)" v-else>Unfollow</button>
               </span>
             </div>
           </li>
@@ -35,7 +35,13 @@ export default {
   created () {
     this.getUsers()
   },
+  mounted () {
+    this.getUsers()
+  },
   methods: {
+    getFollowing () {
+      return this.user.following
+    },
     getUsers () {
       let self = this
 
@@ -47,19 +53,22 @@ export default {
         }
       })
         .then(response => {
+          let userData = self.user
+          let filteredUsers = []
+
           response.data.forEach(user => {
-            if (this.user.following) {
-              this.user.following.forEach(following => {
-                if (user._id === following._id) {
-                  user['followed'] = true
-                } else {
-                  user['followed'] = false
-                }
-              })
-            }
+            userData.following.forEach(following => {
+              if (user._id === following._id) {
+                user['followed'] = true
+              } else {
+                user['followed'] = false
+              }
+            })
+
+            filteredUsers.push(user)
           })
 
-          self.users = response.data
+          self.users = filteredUsers
         })
         .catch(err => {
           console.log(err)

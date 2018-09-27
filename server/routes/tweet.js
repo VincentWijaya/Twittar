@@ -47,4 +47,14 @@ router.post('/search', auth, (req, res) => {
     })
 })
 
+router.delete('/:id', auth, (req, res) => {
+  Tweet.deleteOne({_id: req.params.id})
+    .then(() => {
+      res.status(201).json({msg: 'Tweet deleted!'})
+    })
+    .catch(err => {
+      res.status(500).json({error: err.message})
+    })
+})
+
 module.exports = router

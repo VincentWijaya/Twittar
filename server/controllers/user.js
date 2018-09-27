@@ -48,7 +48,14 @@ class Controller {
 
   static auth(req, res) {
     User.findOne({_id: req.decoded.id})
-      .populate('tweets')
+      .populate({
+        path: 'tweets',
+        populate: {
+          path: 'user', 
+          select: '_id name username'
+        },
+        sort: {createdAt: 'desc'}
+      })
       .populate('following', '_id name username')
       .populate('followers', '_id name username')
       .then(user => {

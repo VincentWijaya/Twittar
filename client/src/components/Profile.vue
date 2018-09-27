@@ -9,29 +9,29 @@
 
         <div class="twPc-divUser">
           <div class="twPc-divName">
-            <a href="https://twitter.com/mertskaplan">{{ user.name }}</a>
+            <a href="#" @click="myTweets">{{ user.name }}</a>
           </div>
           <span>
-            <a href="https://twitter.com/mertskaplan">@<span>{{ user.username }}</span></a>
+            <a href="#" @click="myTweets">@<span>{{ user.username }}</span></a>
           </span>
         </div>
 
         <div class="twPc-divStats">
           <ul class="twPc-Arrange">
             <li class="twPc-ArrangeSizeFit">
-              <a href="https://twitter.com/mertskaplan" title="9.840 Tweet">
+              <a href="#" title="My Tweet" @click="myTweets">
                 <span class="twPc-StatLabel twPc-block">Tweets</span>
                 <span class="twPc-StatValue">{{ user.tweets.length }}</span>
               </a>
             </li>
             <li class="twPc-ArrangeSizeFit">
-              <a href="https://twitter.com/mertskaplan/following" title="885 Following">
+              <a href="#" title="885 Following">
                 <span class="twPc-StatLabel twPc-block">Following</span>
                 <span class="twPc-StatValue">{{ user.following.length }}</span>
               </a>
             </li>
             <li class="twPc-ArrangeSizeFit">
-              <a href="https://twitter.com/mertskaplan/followers" title="1.810 Followers">
+              <a href="#" title="1.810 Followers">
                 <span class="twPc-StatLabel twPc-block">Followers</span>
                 <span class="twPc-StatValue">{{ user.followers.length }}</span>
               </a>
@@ -53,6 +53,19 @@ export default {
   watch: {
     user () {
       return this.$store.state.user
+    }
+  },
+  methods: {
+    myTweets () {
+      let tweets = []
+
+      this.user.tweets.forEach(tweet => {
+        tweet['isHim'] = true
+
+        tweets.push(tweet)
+      })
+
+      this.$store.dispatch('setTweets', tweets)
     }
   }
 }
